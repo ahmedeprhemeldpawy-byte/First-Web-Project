@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahmed Restaurant</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#111;color:#fff}
+
+/* Navbar */
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 30px;
+  background:#000;
+  position:sticky;
+  top:0;
+}
+nav h2{color:#ff4d4d}
+nav a{color:#fff;margin-left:15px;text-decoration:none}
+
+/* Hero */
+.hero{
+  height:90vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+  background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.8)), url('https://picsum.photos/800');
+  background-size:cover;
+}
+.hero h1{font-size:40px}
+.hero button{
+  margin-top:15px;
+  padding:10px 20px;
+  border:none;
+  background:#ff4d4d;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* Menu */
+.menu{
+  padding:40px;
+  text-align:center;
+}
+.cards{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.card{
+  background:#222;
+  margin:10px;
+  padding:20px;
+  border-radius:10px;
+  width:200px;
+  transition:0.3s;
+}
+.card:hover{transform:scale(1.1)}
+
+/* Contact */
+.contact{
+  padding:40px;
+  text-align:center;
+}
+input,textarea{
+  width:80%;
+  margin:10px;
+  padding:10px;
+  border:none;
+}
+button.send{
+  background:#ff4d4d;
+  padding:10px 20px;
+  border:none;
+  color:#fff;
+}
+
+/* Footer */
+footer{
+  text-align:center;
+  padding:15px;
+  background:#000;
+}
+</style>
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <h2>Ahmed</h2>
+  <div>
+    <a href="#">Home</a>
+    <a href="#menu">Menu</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Welcome to Ahmed Restaurant 🍔</h1>
+  <p>Best food you will ever taste</p>
+  <button onclick="showMessage()">Order Now</button>
+</section>
+
+<!-- Menu -->
+<section class="menu" id="menu">
+  <h2>Our Menu</h2>
+  <div class="cards">
+    <div class="card">Burger - $5</div>
+    <div class="card">Pizza - $7</div>
+    <div class="card">Chicken - $6</div>
+    <div class="card">Fries - $3</div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <h2>Contact Us</h2>
+  <input type="text" placeholder="Your Name">
+  <input type="email" placeholder="Your Email">
+  <textarea placeholder="Your Message"></textarea>
+  <br>
+  <button class="send" onclick="sendMsg()">Send</button>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 Ahmed Restaurant</p>
+</footer>
+
+<script>
+function showMessage(){
+  alert("Order feature coming soon 😎");
+}
+
+function sendMsg(){
+  alert("Message sent successfully ✅");
+}
+</script>
+
+</body>
+                                </html>
