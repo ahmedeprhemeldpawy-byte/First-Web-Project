@@ -1,0 +1,124 @@
+let camera, scene, renderer;
+let controls;
+
+const objects = [];
+const targets = { table: [], sphere: [], helix: [], grid: [] };
+
+// بيانات تجريبية (يجب استبدالها ببيانات الجدول الدوري الكاملة)
+const tableData = [
+    { text: "H", value: "1", color: 0x00ff00 },
+    { text: "He", value: "2", color: 0xff0000 },
+    { text: "Li", value: "3", color: 0x00ff00 },
+    { text: "Be", value: "4", color: 0x00ff00 },
+    { text: "B", value: "5", color: 0x0000ff },
+    { text: "C", value: "6", color: 0xff0000 },
+    // أضف المزيد هنا...
+];
+
+init();
+animate();
+
+function init() {
+    // 1. الكاميرا
+    camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.z = 3000;
+
+    // 2. المشهد
+    scene = new THREE.Scene();
+
+    // 3. إنشاء كائنات العناصر
+    const elementWidth = 140, elementHeight = 180, elementPadding = 20;
+
+    for (let i = 0; i < tableData.length; i++) {
+        // إنشاء مكعب لتمثيل العنصر
+        const geometry = new THREE.BoxGeometry(elementWidth, elementHeight, 10);
+        const material = new THREE.MeshBasicMaterial({ color: tableData[i].color, opacity: 0.8, transparent: true });
+        const object = new THREE.Mesh(geometry, material);
+
+        // وضع عشوائي في البداية لجميع الكائنات
+        object.position.x = Math.random() * 4000 - 2000;
+        object.position.y = Math.random() * 4000 - 2000;
+        object.position.z = Math.random() * 4000 - 2000;
+
+        scene.add(object);
+        objects.push(object);
+
+        // -- تحديد المواضع المستهدفة للأشكال المختلفة --
+
+        // المواضع في شكل جدول (Table)
+        const row = Math.floor(i / 18);
+        const col = i % 18;
+        const targetTable = new THREE.Object3D();
+        targetTable.position.x = (col * (elementWidth + elementPadding)) - (9 * (elementWidth + elementPadding));
+        targetTable.position.y = -(row * (elementHeight + elementPadding)) + (5 * (elementHeight + elementPadding));
+        targets.table.push(targetTable);
+
+        // المواضع في شكل كرة (Sphere)
+        const targetSphere = new THREE.Object3D();
+        const vectorSphere = new THREE.Vector3();
+        const phi = Math.acos(-1 + (2 * i) / tableData.length);
+        const theta = Math.sqrt(tableData.length * Math.PI) * phi;
+        targetSphere.position.setFromSphericalCoords(800, phi, theta);
+        vectorSphere.copy(targetSphere.position).multiplyScalar(2);
+        targetSphere.lookAt(vectorSphere);
+        targets.sphere.push(targetSphere);
+
+        // أضف هنا المنطق لـ 'helix' و 'grid' ...
+    }
+
+    // 4. الـ Renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    // 5. ربط الأزرار بالوظائف
+    setupButton('table', targets.table);
+    setupButton('sphere', targets.sphere);
+    // setupButton('helix', targets.helix);
+    // setupButton('grid', targets.grid);
+
+    // العرض الافتراضي في البداية
+    transform(targets.table, 2000);
+}
+
+// دالة لربط كل زر بشكل العرض الخاص به
+function setupButton(id, targets) {
+    document.getElementById(id).addEventListener('click', function () {
+        transform(targets, 2000);
+    });
+}
+
+// دالة الـ التحويل (المحرك الرئيسي للحركة - animation)
+function transform(target, duration) {
+    TWEEN.removeAll(); // مسح أي تحويلات جارية لتجنب التداخل
+
+    for (let i = 0; i < objects.length; i++) {
+        const object = objects[i];
+        const targetObject = target[i];
+
+        // تحريك الموضع
+        new TWEEN.Tween(object.position)
+            .to({ x: targetObject.position.x, y: targetObject.position.y, z: targetObject.position.z }, Math.random() * duration + duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+
+        // تحريك الدوران (التوجيه)
+        new TWEEN.Tween(object.rotation)
+            .to({ x: targetObject.rotation.x, y: targetObject.rotation.y, z: targetObject.rotation.z }, Math.random() * duration + duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+    }
+}
+
+// دالة التحديث والتحريك المستمر
+function animate() {
+    requestAnimationFrame(animate);
+    TWEEN.update(); // تحديث مكتبة التحريك في كل إطار
+    render();
+}
+
+// دالة العرض الرئيسية
+function render() {
+    renderer.render(scene, camera);
+}
